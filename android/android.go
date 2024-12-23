@@ -19,7 +19,7 @@ var _ Android = (*AndroidImpl)(nil)
 
 func New(appname *string, appauthor any, version *string, roaming *bool, multipath *bool, opinion *bool, ensureExists *bool) *AndroidImpl {
 	this := &AndroidImpl{*api.NewPlatformDirsABC(appname, appauthor, version, roaming, multipath, opinion, ensureExists)}
-	this.This = this
+	this.X__This = this
 	return this
 }
 
@@ -28,11 +28,11 @@ func (p *AndroidImpl) UserDataDir() string {
 	if !ok {
 		panic(errors.New("X__AndroidFolder() failed"))
 	}
-	return p.This.(Android).X__AppendAppNameAndVersion(f, "files")
+	return p.X__This.(Android).X__AppendAppNameAndVersion(f, "files")
 }
 
 func (p *AndroidImpl) SiteDataDir() string {
-	return p.This.(Android).UserDataDir()
+	return p.X__This.(Android).UserDataDir()
 }
 
 func (p *AndroidImpl) UserConfigDir() string {
@@ -40,11 +40,11 @@ func (p *AndroidImpl) UserConfigDir() string {
 	if !ok {
 		panic(errors.New("X__AndroidFolder() failed"))
 	}
-	return p.This.(Android).X__AppendAppNameAndVersion(f, "shared_prefs")
+	return p.X__This.(Android).X__AppendAppNameAndVersion(f, "shared_prefs")
 }
 
 func (p *AndroidImpl) SiteConfigDir() string {
-	return p.This.(Android).UserConfigDir()
+	return p.X__This.(Android).UserConfigDir()
 }
 
 func (p *AndroidImpl) UserCacheDir() string {
@@ -52,20 +52,20 @@ func (p *AndroidImpl) UserCacheDir() string {
 	if !ok {
 		panic(errors.New("X__AndroidFolder() failed"))
 	}
-	return p.This.(Android).X__AppendAppNameAndVersion(f, "cache")
+	return p.X__This.(Android).X__AppendAppNameAndVersion(f, "cache")
 }
 
 func (p *AndroidImpl) SiteCacheDir() string {
-	return p.This.(Android).UserCacheDir()
+	return p.X__This.(Android).UserCacheDir()
 }
 
 func (p *AndroidImpl) UserStateDir() string {
-	return p.This.(Android).UserDataDir()
+	return p.X__This.(Android).UserDataDir()
 }
 
 func (p *AndroidImpl) UserLogDir() string {
-	path := p.This.(Android).UserCacheDir()
-	if p.Opinion {
+	path := p.X__This.(Android).UserCacheDir()
+	if p.X__This.(Android).Opinion() {
 		path = filepath.Join(path, "log")
 	}
 	return path
@@ -96,15 +96,15 @@ func (p *AndroidImpl) UserDesktopDir() string {
 }
 
 func (p *AndroidImpl) UserRuntimeDir() string {
-	path := p.This.(Android).UserCacheDir()
-	if p.Opinion {
+	path := p.X__This.(Android).UserCacheDir()
+	if p.X__This.(Android).Opinion() {
 		path = filepath.Join(path, "tmp")
 	}
 	return path
 }
 
 func (p *AndroidImpl) SiteRuntimeDir() string {
-	return p.This.(Android).UserRuntimeDir()
+	return p.X__This.(Android).UserRuntimeDir()
 }
 
 func X__AndroidFolder() (string, bool) {
@@ -130,4 +130,3 @@ func androidVideosFolder() string {
 func androidMusicFolder() string {
 	panic("not implemented")
 }
-

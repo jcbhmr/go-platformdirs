@@ -29,19 +29,19 @@ var _ Windows = (*WindowsImpl)(nil)
 
 func New(appname *string, appauthor any, version *string, roaming *bool, multipath *bool, opinion *bool, ensureExists *bool) *WindowsImpl {
 	this := &WindowsImpl{*api.NewPlatformDirsABC(appname, appauthor, version, roaming, multipath, opinion, ensureExists)}
-	this.This = this
+	this.X__This = this
 	return this
 }
 
 func (p *WindowsImpl) UserDataDir() string {
 	var const2 string
-	if p.Roaming {
+	if p.X__This.(Windows).Roaming() {
 		const2 = "CSIDL_APPDATA"
 	} else {
 		const2 = "CSIDL_LOCAL_APPDATA"
 	}
 	path := filepath.Clean(getWinFolder(const2))
-	return p.This.(Windows).X__AppendParts(path, nil)
+	return p.X__This.(Windows).X__AppendParts(path, nil)
 }
 
 func (p *WindowsImpl) X__AppendParts(path string, options *Windows_X__AppendPartsOptions) string {
@@ -52,61 +52,61 @@ func (p *WindowsImpl) X__AppendParts(path string, options *Windows_X__AppendPart
 		opinionValue = nil
 	}
 	params := []string{}
-	if p.Appname != nil && *p.Appname != "" {
-		if v, ok := p.Appauthor.(bool); !ok || v {
+	if appname, ok := p.X__This.(Windows).Appname(); ok && appname != "" {
+		if appauthor, ok := p.X__This.(Windows).Appauthor().(bool); !ok || appauthor {
 			var author string
-			if p.Appauthor != nil && p.Appauthor.(string) != "" {
-				author = p.Appauthor.(string)
+			if appauthor, ok := p.X__This.(Windows).Appauthor().(string); ok && appauthor != "" {
+				author = appauthor
 			} else {
-				author = *p.Appname
+				author = appname
 			}
 			params = append(params, author)
 		}
-		params = append(params, *p.Appname)
+		params = append(params, appname)
 		if opinionValue != nil && *opinionValue != "" {
 			params = append(params, *opinionValue)
 		}
-		if p.Version != nil && *p.Version != "" {
-			params = append(params, *p.Version)
+		if version, ok := p.X__This.(Windows).Version(); ok && version != "" {
+			params = append(params, version)
 		}
 	}
 	path = filepath.Join(append([]string{path}, params...)...)
-	p.This.(Windows).X__OptionallyCreateDirectory(path)
+	p.X__This.(Windows).X__OptionallyCreateDirectory(path)
 	return path
 }
 
 func (p *WindowsImpl) SiteDataDir() string {
 	path := filepath.Clean(getWinFolder("CSIDL_COMMON_APPDATA"))
-	return p.This.(Windows).X__AppendParts(path, nil)
+	return p.X__This.(Windows).X__AppendParts(path, nil)
 }
 
 func (p *WindowsImpl) UserConfigDir() string {
-	return p.This.(Windows).UserDataDir()
+	return p.X__This.(Windows).UserDataDir()
 }
 
 func (p *WindowsImpl) SiteConfigDir() string {
-	return p.This.(Windows).SiteDataDir()
+	return p.X__This.(Windows).SiteDataDir()
 }
 
 func (p *WindowsImpl) UserCacheDir() string {
 	path := filepath.Clean(getWinFolder("CSIDL_LOCAL_APPDATA"))
-	return p.This.(Windows).X__AppendParts(path, &Windows_X__AppendPartsOptions{OpinionValue: ptr("Cache")})
+	return p.X__This.(Windows).X__AppendParts(path, &Windows_X__AppendPartsOptions{OpinionValue: ptr("Cache")})
 }
 
 func (p *WindowsImpl) SiteCacheDir() string {
 	path := filepath.Clean(getWinFolder("CSIDL_COMMON_APPDATA"))
-	return p.This.(Windows).X__AppendParts(path, &Windows_X__AppendPartsOptions{OpinionValue: ptr("Cache")})
+	return p.X__This.(Windows).X__AppendParts(path, &Windows_X__AppendPartsOptions{OpinionValue: ptr("Cache")})
 }
 
 func (p *WindowsImpl) UserStateDir() string {
-	return p.This.(Windows).UserDataDir()
+	return p.X__This.(Windows).UserDataDir()
 }
 
 func (p *WindowsImpl) UserLogDir() string {
-	path := p.This.(Windows).UserDataDir()
-	if p.Opinion {
+	path := p.X__This.(Windows).UserDataDir()
+	if p.X__This.(Windows).Opinion() {
 		path = filepath.Join(path, "Logs")
-		p.This.(Windows).X__OptionallyCreateDirectory(path)
+		p.X__This.(Windows).X__OptionallyCreateDirectory(path)
 	}
 	return path
 }
@@ -137,11 +137,11 @@ func (p *WindowsImpl) UserDesktopDir() string {
 
 func (p *WindowsImpl) UserRuntimeDir() string {
 	path := filepath.Clean(filepath.Join(getWinFolder("CSIDL_LOCAL_APPDATA"), "Temp"))
-	return p.This.(Windows).X__AppendParts(path, nil)
+	return p.X__This.(Windows).X__AppendParts(path, nil)
 }
 
 func (p *WindowsImpl) SiteRuntimeDir() string {
-	return p.This.(Windows).UserRuntimeDir()
+	return p.X__This.(Windows).UserRuntimeDir()
 }
 
 func getWinFolderFromEnvVars(csidlName string) string {

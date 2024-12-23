@@ -48,7 +48,7 @@ var _ Unix = (*UnixImpl)(nil)
 
 func New(appname *string, appauthor any, version *string, roaming *bool, multipath *bool, opinion *bool, ensureExists *bool) *UnixImpl {
 	this := &UnixImpl{*api.NewPlatformDirsABC(appname, appauthor, version, roaming, multipath, opinion, ensureExists)}
-	this.This = this
+	this.X__This = this
 	return this
 }
 
@@ -57,7 +57,7 @@ func (p *UnixImpl) UserDataDir() string {
 	if strings.TrimSpace(path) == "" {
 		path = filepath.Join(mustUserHomeDir(), ".local/share")
 	}
-	return p.This.(Unix).X__AppendAppNameAndVersion(path)
+	return p.X__This.(Unix).X__AppendAppNameAndVersion(path)
 }
 
 func (p *UnixImpl) X__SiteDataDirs() []string {
@@ -67,14 +67,14 @@ func (p *UnixImpl) X__SiteDataDirs() []string {
 	}
 	r := []string{}
 	for _, p2 := range filepath.SplitList(path) {
-		r = append(r, p.This.(Unix).X__AppendAppNameAndVersion(p2))
+		r = append(r, p.X__This.(Unix).X__AppendAppNameAndVersion(p2))
 	}
 	return r
 }
 
 func (p *UnixImpl) SiteDataDir() string {
-	dirs := p.This.(Unix).X__SiteDataDirs()
-	if !p.Multipath {
+	dirs := p.X__This.(Unix).X__SiteDataDirs()
+	if !p.X__This.(Unix).Multipath() {
 		return dirs[0]
 	}
 	return strings.Join(dirs, string(filepath.ListSeparator))
@@ -85,7 +85,7 @@ func (p *UnixImpl) UserConfigDir() string {
 	if strings.TrimSpace(path) == "" {
 		path = filepath.Join(mustUserHomeDir(), ".config")
 	}
-	return p.This.(Unix).X__AppendAppNameAndVersion(path)
+	return p.X__This.(Unix).X__AppendAppNameAndVersion(path)
 }
 
 func (p *UnixImpl) X__SiteConfigDirs() []string {
@@ -95,14 +95,14 @@ func (p *UnixImpl) X__SiteConfigDirs() []string {
 	}
 	r := []string{}
 	for _, p2 := range filepath.SplitList(path) {
-		r = append(r, p.This.(Unix).X__AppendAppNameAndVersion(p2))
+		r = append(r, p.X__This.(Unix).X__AppendAppNameAndVersion(p2))
 	}
 	return r
 }
 
 func (p *UnixImpl) SiteConfigDir() string {
-	dirs := p.This.(Unix).X__SiteConfigDirs()
-	if !p.Multipath {
+	dirs := p.X__This.(Unix).X__SiteConfigDirs()
+	if !p.X__This.(Unix).Multipath() {
 		return dirs[0]
 	}
 	return strings.Join(dirs, string(filepath.ListSeparator))
@@ -113,11 +113,11 @@ func (p *UnixImpl) UserCacheDir() string {
 	if strings.TrimSpace(path) == "" {
 		path = filepath.Join(mustUserHomeDir(), ".cache")
 	}
-	return p.This.(Unix).X__AppendAppNameAndVersion(path)
+	return p.X__This.(Unix).X__AppendAppNameAndVersion(path)
 }
 
 func (p *UnixImpl) SiteCacheDir() string {
-	return p.This.(Unix).X__AppendAppNameAndVersion("/var/cache")
+	return p.X__This.(Unix).X__AppendAppNameAndVersion("/var/cache")
 }
 
 func (p *UnixImpl) UserStateDir() string {
@@ -125,14 +125,14 @@ func (p *UnixImpl) UserStateDir() string {
 	if strings.TrimSpace(path) == "" {
 		path = filepath.Join(mustUserHomeDir(), ".local/state")
 	}
-	return p.This.(Unix).X__AppendAppNameAndVersion(path)
+	return p.X__This.(Unix).X__AppendAppNameAndVersion(path)
 }
 
 func (p *UnixImpl) UserLogDir() string {
-	path := p.This.(Unix).UserStateDir()
-	if p.Opinion {
+	path := p.X__This.(Unix).UserStateDir()
+	if p.X__This.(Unix).Opinion() {
 		path = filepath.Join(path, "log")
-		p.This.(Unix).X__OptionallyCreateDirectory(path)
+		p.X__This.(Unix).X__OptionallyCreateDirectory(path)
 	}
 	return path
 }
@@ -173,7 +173,7 @@ func (p *UnixImpl) UserRuntimeDir() string {
 			path = fmt.Sprintf("/run/user/%d", getuid())
 		}
 	}
-	return p.This.(Unix).X__AppendAppNameAndVersion(path)
+	return p.X__This.(Unix).X__AppendAppNameAndVersion(path)
 }
 
 func (p *UnixImpl) SiteRuntimeDir() string {
@@ -185,27 +185,27 @@ func (p *UnixImpl) SiteRuntimeDir() string {
 			path = "/run"
 		}
 	}
-	return p.This.(Unix).X__AppendAppNameAndVersion(path)
+	return p.X__This.(Unix).X__AppendAppNameAndVersion(path)
 }
 
 func (p *UnixImpl) SiteDataPath() string {
-	return p.This.(Unix).X__FirstItemAsPathIfMultipath(p.This.(Unix).SiteDataDir())
+	return p.X__This.(Unix).X__FirstItemAsPathIfMultipath(p.X__This.(Unix).SiteDataDir())
 }
 
 func (p *UnixImpl) SiteConfigPath() string {
-	return p.This.(Unix).X__FirstItemAsPathIfMultipath(p.This.(Unix).SiteConfigDir())
+	return p.X__This.(Unix).X__FirstItemAsPathIfMultipath(p.X__This.(Unix).SiteConfigDir())
 }
 
 func (p *UnixImpl) SiteCachePath() string {
-	return p.This.(Unix).X__FirstItemAsPathIfMultipath(p.This.(Unix).SiteCacheDir())
+	return p.X__This.(Unix).X__FirstItemAsPathIfMultipath(p.X__This.(Unix).SiteCacheDir())
 }
 
 func (p *UnixImpl) IterConfigDirs() iter.Seq[string] {
 	return func(yield func(string) bool) {
-		if !yield(p.This.(Unix).UserConfigDir()) {
+		if !yield(p.X__This.(Unix).UserConfigDir()) {
 			return
 		}
-		for _, x := range p.This.(Unix).X__SiteConfigDirs() {
+		for _, x := range p.X__This.(Unix).X__SiteConfigDirs() {
 			if !yield(x) {
 				return
 			}
@@ -215,10 +215,10 @@ func (p *UnixImpl) IterConfigDirs() iter.Seq[string] {
 
 func (p *UnixImpl) IterDataDirs() iter.Seq[string] {
 	return func(yield func(string) bool) {
-		if !yield(p.This.(Unix).UserDataDir()) {
+		if !yield(p.X__This.(Unix).UserDataDir()) {
 			return
 		}
-		for _, x := range p.This.(Unix).X__SiteDataDirs() {
+		for _, x := range p.X__This.(Unix).X__SiteDataDirs() {
 			if !yield(x) {
 				return
 			}

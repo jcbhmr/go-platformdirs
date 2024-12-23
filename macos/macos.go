@@ -29,12 +29,12 @@ var _ MacOS = (*MacOSImpl)(nil)
 
 func New(appname *string, appauthor any, version *string, roaming *bool, multipath *bool, opinion *bool, ensureExists *bool) *MacOSImpl {
 	this := &MacOSImpl{*api.NewPlatformDirsABC(appname, appauthor, version, roaming, multipath, opinion, ensureExists)}
-	this.This = this
+	this.X__This = this
 	return this
 }
 
 func (p *MacOSImpl) UserDataDir() string {
-	return p.This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Application Support"))
+	return p.X__This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Application Support"))
 }
 
 func (p *MacOSImpl) SiteDataDir() string {
@@ -51,8 +51,8 @@ func (p *MacOSImpl) SiteDataDir() string {
 	} else {
 		pathList = []string{}
 	}
-	pathList = append(pathList, p.This.(MacOS).X__AppendAppNameAndVersion("/Library/Application Support"))
-	if p.Multipath {
+	pathList = append(pathList, p.X__This.(MacOS).X__AppendAppNameAndVersion("/Library/Application Support"))
+	if p.X__This.(MacOS).Multipath() {
 		return strings.Join(pathList, string(filepath.ListSeparator))
 	} else {
 		return pathList[0]
@@ -60,19 +60,19 @@ func (p *MacOSImpl) SiteDataDir() string {
 }
 
 func (p *MacOSImpl) SiteDataPath() string {
-	return p.This.(MacOS).X__FirstItemAsPathIfMultipath(p.SiteDataDir())
+	return p.X__This.(MacOS).X__FirstItemAsPathIfMultipath(p.SiteDataDir())
 }
 
 func (p *MacOSImpl) UserConfigDir() string {
-	return p.This.(MacOS).UserDataDir()
+	return p.X__This.(MacOS).UserDataDir()
 }
 
 func (p *MacOSImpl) SiteConfigDir() string {
-	return p.This.(MacOS).SiteDataDir()
+	return p.X__This.(MacOS).SiteDataDir()
 }
 
 func (p *MacOSImpl) UserCacheDir() string {
-	return p.This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Caches"))
+	return p.X__This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Caches"))
 }
 
 func (p *MacOSImpl) SiteCacheDir() string {
@@ -89,8 +89,8 @@ func (p *MacOSImpl) SiteCacheDir() string {
 	} else {
 		pathList = []string{}
 	}
-	pathList = append(pathList, p.This.(MacOS).X__AppendAppNameAndVersion("/Library/Caches"))
-	if p.Multipath {
+	pathList = append(pathList, p.X__This.(MacOS).X__AppendAppNameAndVersion("/Library/Caches"))
+	if p.X__This.(MacOS).Multipath() {
 		return strings.Join(pathList, string(filepath.ListSeparator))
 	} else {
 		return pathList[0]
@@ -98,15 +98,15 @@ func (p *MacOSImpl) SiteCacheDir() string {
 }
 
 func (p *MacOSImpl) SiteCachePath() string {
-	return p.This.(MacOS).X__FirstItemAsPathIfMultipath(p.SiteCacheDir())
+	return p.X__This.(MacOS).X__FirstItemAsPathIfMultipath(p.SiteCacheDir())
 }
 
 func (p *MacOSImpl) UserStateDir() string {
-	return p.This.(MacOS).UserDataDir()
+	return p.X__This.(MacOS).UserDataDir()
 }
 
 func (p *MacOSImpl) UserLogDir() string {
-	return p.This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Logs"))
+	return p.X__This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Logs"))
 }
 
 func (p *MacOSImpl) UserDocumentsDir() string {
@@ -134,9 +134,9 @@ func (p *MacOSImpl) UserDesktopDir() string {
 }
 
 func (p *MacOSImpl) UserRuntimeDir() string {
-	return p.This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Caches/TemporaryItems"))
+	return p.X__This.(MacOS).X__AppendAppNameAndVersion(filepath.Join(mustUserHomeDir(), "Library/Caches/TemporaryItems"))
 }
 
 func (p *MacOSImpl) SiteRuntimeDir() string {
-	return p.This.(MacOS).UserRuntimeDir()
+	return p.X__This.(MacOS).UserRuntimeDir()
 }
