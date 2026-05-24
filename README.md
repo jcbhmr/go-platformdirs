@@ -1,5 +1,15 @@
 # platformdirs for Go
 
+<div align=center>
+<table><td>
+
+```go
+TODO
+```
+
+</table>
+</div>
+
 ## Installation
 
 ```sh
